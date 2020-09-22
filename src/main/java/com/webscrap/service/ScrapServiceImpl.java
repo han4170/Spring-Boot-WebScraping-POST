@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;		
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +57,7 @@ public class ScrapServiceImpl implements ScrapService{
 			options.addArguments("--start-maximized"); // 전체화면으로 실행
 			options.addArguments("--disable-popup-blocking"); // 팝업 무시
 			options.addArguments("--disable-default-apps"); // 기본앱 사용안함
-			options.addArguments("headless"); // 브라우저 오픈하지 않음
+			//options.addArguments("headless"); // 브라우저 오픈하지 않음
 
 			// WebDriver 객체 생성
 			// ChromeDriver driver = new ChromeDriver( options );
@@ -67,6 +69,29 @@ public class ScrapServiceImpl implements ScrapService{
 			// 5초간 중지시킨다.(단위 : 밀리세컨드)
 			Thread.sleep(5000);
 
+			// 국세청 홈텍스 POP-UP Windows Close 
+			String HomeMainWindow = null;
+			Set<String> PopUpWin = null;
+			Iterator<String> PopUpWinI = null;
+			HomeMainWindow = driver.getWindowHandle();
+			// 새로 열린 모든 창을 처리합니다.
+			PopUpWin = driver.getWindowHandles();
+			PopUpWinI = PopUpWin.iterator();
+
+			while (PopUpWinI.hasNext()) {
+				String PopUpWindow = PopUpWinI.next();
+
+				if (!HomeMainWindow.equalsIgnoreCase(PopUpWindow)) {
+
+					// 하위 창으로 전환
+					driver.switchTo().window(PopUpWindow);
+					// 자식 창 닫기.
+					driver.close();
+				}
+			}
+			// 부모 윈도우, 즉 메인 윈도우로 전환.
+			driver.switchTo().window(HomeMainWindow);
+			
 			// 로그인
 			WebElement element = driver.findElement(By.cssSelector("#group88615548"));
 			element.click();
@@ -106,6 +131,25 @@ public class ScrapServiceImpl implements ScrapService{
 			element5.click();
 			System.out.println("Clicked on" + element5);
 
+			//  로그인 완료 후 POP-UP Windows Close
+			Thread.sleep(3000);
+			PopUpWin = driver.getWindowHandles();
+			PopUpWinI = PopUpWin.iterator();
+
+			while (PopUpWinI.hasNext()) {
+				String PopUpWindow = PopUpWinI.next();
+
+				if (!HomeMainWindow.equalsIgnoreCase(PopUpWindow)) {
+
+					// 하위 창으로 전환
+					driver.switchTo().window(PopUpWindow);
+					// 자식 창 닫기.
+					driver.close();
+				}
+			}
+			// 부모 윈도우, 즉 메인 윈도우로 전환.
+			driver.switchTo().window(HomeMainWindow);			
+			
 			// 조회 메뉴 선택
 			Thread.sleep(5000);
 			// WebElement element6 =

@@ -86,8 +86,8 @@ public class ScrapServiceImpl implements ScrapService{
 			// 공인인증서 - 프레임 이동
 			driver.switchTo().frame("dscert");
 			// 공인인증서 - 하드디스크 이동식 선택
-			WebElement element2 = driver.findElement(By.xpath(
-					"/html[1]/body[1]/div[5]/div[2]/div[1]/div[1]/div[4]/div[1]/form[1]/div[1]/div[1]/ul[1]/li[2]/a[1]"));
+			//WebElement element2 = driver.findElement(By.xpath("/html[1]/body[1]/div[5]/div[2]/div[1]/div[1]/div[4]/div[1]/form[1]/div[1]/div[1]/ul[1]/li[2]/a[1]"));
+			WebElement element2 = driver.findElement(By.cssSelector("#stg_hdd"));
 			element2.click();
 			System.out.println("Clicked on" + element2);
 			// 공인인증서 - 로컬 디스크 (C) 선택

@@ -159,6 +159,24 @@ public class ScrapServiceImpl implements ScrapService{
 			System.out.println("Clicked on" + element6);
 			// 현금영수증
 			Thread.sleep(2000);
+			// 조회선택 후에 pop-up close 2020-10-15
+			PopUpWin = driver.getWindowHandles();
+			PopUpWinI = PopUpWin.iterator();
+
+			while (PopUpWinI.hasNext()) {
+				String PopUpWindow = PopUpWinI.next();
+
+				if (!HomeMainWindow.equalsIgnoreCase(PopUpWindow)) {
+
+					// 하위 창으로 전환
+					driver.switchTo().window(PopUpWindow);
+					// 자식 창 닫기.
+					driver.close();
+				}
+			}
+			// 부모 윈도우, 즉 메인 윈도우로 전환.
+			driver.switchTo().window(HomeMainWindow);
+			
 			driver.switchTo().frame("txppIframe");
 			WebElement element7 = driver.findElement(By.id("sub_a_0105010000"));
 			element7.click();
